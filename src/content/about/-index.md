@@ -1,8 +1,8 @@
 ---
-title: Hey, I'm Jane Doe!
-description: this is meta description
-image: "@assets/profile/jane-doe.jpg"
+title: 你好，我是伍玉莹~
+description: AKA Yuying Wu，90 后，喜欢 前端开发 / 摄影 / 旅行 / 美食 / 锻炼
+image: "//wyy-static.oss-cn-guangzhou.aliyuncs.com/xx/bio-photo.jpg"
 draft: false
 ---
 
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis illum nesciunt commodi vel nisi ut alias excepturi ipsum, totam, labore tempora, odit ex iste tempore sed. Fugit voluptatibus perspiciatis assumenda nulla ad nihil, omnis vel, doloremque sit quam autem optio maiores, illum eius facilis et quo consectetur provident dolor similique! Enim voluptatem dicta expedita veritatis repellat dolorum impedit, provident quasi at.
+AKA Yuying Wu，90 后，喜欢 前端开发 / 摄影 / 旅行 / 美食 / 锻炼
