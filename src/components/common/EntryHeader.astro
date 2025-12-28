@@ -79,14 +79,22 @@ tags?.sort((a: string, b: string) => a.localeCompare(b));
   {
     image && showImage && (
       <div class="mb-8 glass rounded-lg intersect:animate-fadeDown opacity-0 intersect-no-queue">
-        <Image
-          class="w-full rounded-lg"
-          src={image}
-          alt={imageAlt || ""}
-          height={500}
-          width={1200}
-          loading="eager"
-        />
+        {typeof image === "string" ? (
+          <img
+            class="w-full rounded-lg"
+            src={image}
+            alt={imageAlt || ""}
+          />
+        ) : (
+          <Image
+            class="w-full rounded-lg"
+            src={image}
+            alt={imageAlt || ""}
+            height={500}
+            width={1200}
+            loading="eager"
+          />
+        )}
       </div>
     )
   }

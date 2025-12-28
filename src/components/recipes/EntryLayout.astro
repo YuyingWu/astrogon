@@ -32,7 +32,7 @@ const {
 } = entry.data;
 ---
 
-<BaseLayout title={title} description={description} image={image?.src}>
+<BaseLayout title={title} description={description} image={typeof image === "string" ? image : image?.src}>
   <section class="section">
     <div class="container">
       <div class="row justify-center">
@@ -44,14 +44,22 @@ const {
             image && (
               <div class="col basis-2/3 p-2 min-w-72">
                 <div class="glass rounded-lg intersect:animate-fadeDown opacity-0">
-                  <Image
-                    class="w-full rounded-lg"
-                    src={image}
-                    alt={imageAlt}
-                    width={1920}
-                    height={1080}
-                    loading="eager"
-                  />
+                  {typeof image === "string" ? (
+                    <img
+                      class="w-full rounded-lg"
+                      src={image}
+                      alt={imageAlt}
+                    />
+                  ) : (
+                    <Image
+                      class="w-full rounded-lg"
+                      src={image}
+                      alt={imageAlt}
+                      width={1920}
+                      height={1080}
+                      loading="eager"
+                    />
+                  )}
                 </div>
               </div>
             )
@@ -167,6 +175,18 @@ const {
                         <hr class="my-1" />
                       </div>
                     ))}
+                  </div>
+                </div>
+              </section>
+            )
+
+          }
+          {
+            Astro.slots.has("default") && (
+              <section class="col basis-full p-2 min-w-72">
+                <div class="glass rounded-lg p-4 intersect:animate-fadeUp opacity-0">
+                  <div class="content">
+                    <slot />
                   </div>
                 </div>
               </section>

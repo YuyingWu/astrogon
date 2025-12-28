@@ -52,14 +52,21 @@ const blog = defineCollection({
   schema: ({ image }) =>
     searchable.extend({
       date: z.date().optional(),
-      image: image().optional(),
+      image: image().or(z.string()).optional(),
       imageAlt: z.string().default(""),
       author: reference("authors").optional(),
       categories: z.array(z.string()).optional(),
       tags: z.array(z.string()).optional(),
       complexity: z.number().default(1),
       hideToc: z.boolean().default(false),
-    }),
+      // Legacy fields compatibility
+      cover: z.string().optional(),
+      published: z.date().optional(),
+    }).transform((data) => ({
+      ...data,
+      image: data.image || data.cover,
+      date: data.date || data.published,
+    })),
 });
 
 const docs = defineCollection({
@@ -140,7 +147,7 @@ const recipes = defineCollection({
   schema: ({ image }) =>
     searchable.extend({
       date: z.date().optional(),
-      image: image().optional(),
+      image: image().or(z.string()).optional(),
       imageAlt: z.string().default(""),
       author: reference("authors").optional(),
       prepTime: z.number().optional(),
@@ -154,7 +161,16 @@ const recipes = defineCollection({
         .optional(),
       instructions: z.array(z.string()).optional(),
       notes: z.array(z.string()).optional(),
-    }),
+      // Legacy fields compatibility
+      categories: z.array(z.string()).optional(),
+      tags: z.array(z.string()).optional(),
+      cover: z.string().optional(),
+      published: z.date().optional(),
+    }).transform((data) => ({
+      ...data,
+      image: data.image || data.cover,
+      date: data.date || data.published,
+    })),
 });
 
 const terms = defineCollection({

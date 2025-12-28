@@ -12,12 +12,16 @@ import cloudflare from "@astrojs/cloudflare";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://janedoe.com",
+  site: "https://wuyuying.com",
   base: "/",
   trailingSlash: "ignore",
   prefetch: {
     prefetchAll: true
   },
+  /* image: {
+    domains: ["wyy-static.oss-cn-guangzhou.aliyuncs.com"],
+    remotePatterns: [{ protocol: "https", hostname: "**.aliyuncs.com" }],
+  }, */
   adapter: cloudflare(),
   integrations: [react(), sitemap(), tailwind({
     config: {
@@ -35,7 +39,7 @@ export default defineConfig({
       themes: { // https://shiki.style/themes
         light: "light-plus",
         dark: "dark-plus",
-      } 
+      }
     },
     extendDefaultPlugins: true
   },

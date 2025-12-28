@@ -27,7 +27,7 @@ const entryDescription =
   (autodescription ? plainify(entry.body!.slice(0, descriptionLenth)) : null);
 ---
 
-<BaseLayout title={title} description={entryDescription} image={image?.src}>
+<BaseLayout title={title} description={entryDescription} image={typeof image === "string" ? image : image?.src}>
   <section class="flex container p-4">
     <div class=`w-full ${actuallyHideToc ? "" : "md:col-9"}`>
       <article class="">
