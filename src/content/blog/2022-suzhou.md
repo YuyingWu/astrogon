@@ -7,8 +7,6 @@ cover: https://wyy-static.oss-cn-guangzhou.aliyuncs.com/xx/suzhou-2022/FullSizeR
 ---
 > 姑苏城外寒山寺，夜半钟声到客船  
 > —— 张继《枫桥夜泊》
-
-!["寒山寺"](https://wyy-static.oss-cn-guangzhou.aliyuncs.com/xx/suzhou-2022/FullSizeRender1.jpg?x-oss-process=style/cocktail)
   
 十一假期，终于有机会出来玩，来了苏州~ 
   
