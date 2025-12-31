@@ -1,12 +1,49 @@
 ---
-// Temporarily redirect to blog
-return Astro.redirect("/blog");
+// Root path now directly shows blog content (no redirect)
+import CollectionLayout from "@components/blog/CollectionLayout.astro";
+import { getTaxaMultiset, getTaxa } from "@lib/taxonomyParser";
+import { getEntries, getIndex } from "@lib/contentParser";
+import { sortByDate } from "@lib/sortFunctions";
+import type { BlogEntry } from "@/types";
 
-// Original home page code (commented out)
-// import { getIndex } from "@lib/contentParser";
-// import EntryLayout from "@components/home/EntryLayout.astro";
-// import type { HomeEntry } from "@/types";
-// const entry = (await getIndex("home")) as HomeEntry;
+const { slug } = Astro.params;
+const currentPageIndex = slug && !isNaN(Number(slug)) ? Number(slug) : 1;
+
+const entryIndex = (await getIndex("blog")) as BlogEntry;
+const entries = (await getEntries("blog", sortByDate)) as BlogEntry[];
+
+const allCategories = await getTaxaMultiset("blog", "categories");
+const categories = await getTaxa("blog", "categories");
+const tags = await getTaxa("blog", "tags");
+
+const entriesPerPage = 10;
+const indexOfLastEntry = currentPageIndex * entriesPerPage;
+const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
+const currentEntries = entries.slice(indexOfFirstEntry, indexOfLastEntry);
+
+const pageCount: number = Math.ceil(entries.length / entriesPerPage);
 ---
 
-<!-- <EntryLayout entry={entry} /> -->
+<CollectionLayout
+  entryIndex={entryIndex}
+  entries={currentEntries}
+  categories={categories}
+  tags={tags}
+  allCategories={allCategories}
+  pageIndex={currentPageIndex}
+  pageCount={pageCount}
+/>
+
+<!--
+Original home page code (commented out for future restoration)
+
+---
+import { getIndex } from "@lib/contentParser";
+import EntryLayout from "@components/home/EntryLayout.astro";
+import type { HomeEntry } from "@/types";
+
+const entry = (await getIndex("home")) as HomeEntry;
+---
+
+<EntryLayout entry={entry} />
+-->
