@@ -1,9 +1,12 @@
 ---
-import { getIndex } from "@lib/contentParser";
-import EntryLayout from "@components/home/EntryLayout.astro";
-import type { HomeEntry } from "@/types";
+// Temporarily redirect to blog
+return Astro.redirect("/blog");
 
-const entry = (await getIndex("home")) as HomeEntry;
+// Original home page code (commented out)
+// import { getIndex } from "@lib/contentParser";
+// import EntryLayout from "@components/home/EntryLayout.astro";
+// import type { HomeEntry } from "@/types";
+// const entry = (await getIndex("home")) as HomeEntry;
 ---
 
-<EntryLayout entry={entry} />
+<!-- <EntryLayout entry={entry} /> -->
