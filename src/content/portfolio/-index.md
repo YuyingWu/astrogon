@@ -1,6 +1,6 @@
 ---
 title: Portfolio
-description: Jane Doe's projects and programs.
+description: 小伍的项目作品集
 
 projects:
   - title: "Conway's Game of Life"
