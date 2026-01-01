@@ -15,9 +15,10 @@ export interface Props {
   image?: string;
   noindex?: boolean;
   canonical?: string;
+  schema?: any;
 }
 
-const { title, description, image, noindex, canonical } = Astro.props;
+const { title, description, image, noindex, canonical, schema } = Astro.props;
 
 const siteTitle = "小伍";
 const siteDescription = "小伍的部落格";
@@ -130,6 +131,7 @@ const baseUrl = "https://wuyuying.com";
     <!-- https://docs.astro.build/en/guides/view-transitions -->
     <ClientRouter fallback="swap" />
     <Tooltips interactive={false} delay={[333, 0]} />
+    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
   </head>
   <body>
     <Background />

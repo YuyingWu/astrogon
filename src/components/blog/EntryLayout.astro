@@ -22,12 +22,16 @@ const tocDepth = 3; // maximum depth for the table of contents 1 = h1, etc
 
 const actuallyHideToc = hideToc || globalHideToc || headings.filter((heading) => heading.depth <= tocDepth).length === 0;
 
+import { getArticleSchema } from "@lib/seo";
+
 const entryDescription =
   description ||
   (autodescription ? plainify(entry.body!.slice(0, descriptionLenth)) : null);
+
+const schema = getArticleSchema(entry);
 ---
 
-<BaseLayout title={title} description={entryDescription} image={typeof image === "string" ? image : image?.src}>
+<BaseLayout title={title} description={entryDescription} image={typeof image === "string" ? image : image?.src} schema={schema}>
   <section class="flex container p-4">
     <div class=`w-full ${actuallyHideToc ? "" : "md:col-9"}`>
       <article class="">

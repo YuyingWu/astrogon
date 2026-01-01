@@ -1,0 +1,44 @@
+---
+export interface Props {
+  item: any;
+  type?: 'article' | 'website';
+}
+
+const { item, type = 'article' } = Astro.props;
+
+const siteUrl = "https://wuyuying.com";
+
+let schema = null;
+
+if (type === 'article') {
+  schema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `${siteUrl}/blog/${item.slug}`
+    },
+    "headline": item.data.title,
+    "description": item.data.description,
+    "image": item.data.cover ? item.data.cover : `${siteUrl}/images/og-image.png`,
+    "author": {
+      "@type": "Person",
+      "name": "小伍",
+      "url": siteUrl
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Astrogon",
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${siteUrl}/favicon/favicon-32x32.png`
+      }
+    },
+    "datePublished": item.data.published,
+    "dateModified": item.data.updated || item.data.published
+  };
+}
+---
+{schema && (
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+)}
