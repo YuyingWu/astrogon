@@ -20,8 +20,8 @@ export interface Props {
 
 const { title, description, image, noindex, canonical, schema } = Astro.props;
 
-const siteTitle = "小伍";
-const siteDescription = "小伍的部落格";
+const siteTitle = "小伍的部落格";
+const siteDescription = "思考、记录、分享";
 const siteImage = "@assets/og-image.png";
 const siteAuthor = "小伍";
 const baseUrl = "https://wuyuying.com";
@@ -72,7 +72,7 @@ const baseUrl = "https://wuyuying.com";
     />
 
     <title>
-      {plainify(title ? title : siteTitle)}
+      {plainify(title ? `${title} - ${siteTitle}` : siteTitle)}
     </title>
 
     {canonical && <link rel="canonical" href={canonical} item-prop="url" />}
