@@ -75,15 +75,15 @@ module.exports = {
       },
       fontSize: {
         base: font_base + "px",
-        h1: h1 + "rem",
-        "h1-sm": h1 * 0.8 + "rem",
-        h2: h2 + "rem",
-        "h2-sm": h2 * 0.8 + "rem",
-        h3: h3 + "rem",
-        "h3-sm": h3 * 0.8 + "rem",
-        h4: h4 + "rem",
-        h5: h5 + "rem",
-        h6: h6 + "rem",
+        h1: "2rem",
+        "h1-sm": "1.6rem", // 2 * 0.8
+        h2: "1.5rem",
+        "h2-sm": "1.2rem", // 1.5 * 0.8
+        h3: "1.25rem",
+        "h3-sm": "1rem", // 1.25 * 0.8
+        h4: "1rem",
+        h5: "0.875rem",
+        h6: "0.85rem",
       },
       fontFamily: {
         primary: [fontPrimary, fontPrimaryType],

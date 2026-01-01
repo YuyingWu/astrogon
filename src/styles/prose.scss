@@ -3,8 +3,8 @@
   // Base
   @apply prose max-w-none intersect:animate-fadeUp;
   @apply prose-headings:mb-[.3em] prose-headings:mt-[.6em];
-  @apply prose-h1:text-h1-sm md:prose-h1:text-h1;
-  @apply prose-h2:text-h2-sm md:prose-h2:text-h2;
+  @apply prose-h1:text-h1-sm md:prose-h1:text-h1 prose-h1:border-b prose-h1:border-border prose-h1:pb-2 prose-h1:dark:border-darkmode-border;
+  @apply prose-h2:text-h2-sm md:prose-h2:text-h2 prose-h2:border-b prose-h2:border-border prose-h2:pb-2 prose-h2:dark:border-darkmode-border;
   @apply prose-h3:text-h3-sm md:prose-h3:text-h3;
   @apply prose-p:text-base prose-p:text-txt-s prose-p:dark:text-darkmode-txt-s;
   @apply prose-a:text-txt-s prose-a:underline hover:prose-a:text-txt-p prose-a:dark:text-darkmode-txt-s hover:prose-a:dark:text-darkmode-txt-p;
@@ -13,10 +13,10 @@
   @apply prose-strong:text-txt-p prose-strong:dark:text-darkmode-txt-s;
   @apply prose-pre:rounded-lg prose-pre:bg-bg-t prose-pre:dark:bg-darkmode-bg-t;
   // Code
-  @apply prose-code:px-1 prose-code:text-txt-p prose-code:dark:text-darkmode-txt-p;
+  @apply prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:bg-bg-s prose-code:text-txt-p prose-code:dark:bg-darkmode-bg-s prose-code:dark:text-darkmode-txt-p prose-code:before:content-none prose-code:after:content-none;
   // Blockquote
-  @apply prose-blockquote:rounded-lg prose-blockquote:border prose-blockquote:border-l-8 prose-blockquote:px-4 prose-blockquote:py-0 prose-blockquote:font-secondary prose-blockquote:text-2xl prose-blockquote:not-italic;
-  @apply prose-blockquote:glass-t-borderless prose-blockquote:border-border prose-blockquote:dark:border-darkmode-border prose-blockquote:text-txt-s prose-blockquote:dark:text-darkmode-txt-s;
+  @apply prose-blockquote:rounded-lg prose-blockquote:border prose-blockquote:border-l-8 prose-blockquote:px-4 prose-blockquote:py-0 prose-blockquote:font-secondary prose-blockquote:text-base prose-blockquote:not-italic;
+  @apply prose-blockquote:glass-t-borderless prose-blockquote:border-border prose-blockquote:dark:border-darkmode-border prose-blockquote:text-txt-light prose-blockquote:dark:text-darkmode-txt-light;
   @apply prose-blockquote:prose-p:m-0;
   // Table
   @apply prose-table:relative prose-table:overflow-hidden prose-table:rounded-lg prose-table:before:rounded-lg prose-table:before:absolute prose-table:before:left-0 prose-table:before:top-0 prose-table:before:h-full prose-table:before:w-full prose-table:before:border prose-table:before:content-[""] prose-table:before:dark:border-darkmode-border;
@@ -26,9 +26,11 @@
   @apply prose-td:relative prose-td:z-10 prose-td:px-3 prose-td:py-2 prose-td:text-txt-s prose-td:dark:text-darkmode-txt-s;
   // Lists
   @apply prose-li:text-txt-s prose-li:dark:text-darkmode-txt-s;
+
   li::marker {
     @apply text-txt-s dark:text-darkmode-txt-s;
   }
+
   li {
     p {
       @apply m-0; // in .mdx files, li elements can contain <p> tags
