@@ -16,7 +16,7 @@ paths.forEach((label: string, i: number) => {
   const href = `/${paths.slice(0, i + 1).join("/")}`;
   label !== "page" &&
     parts.push({
-      label: lowerHumanize(label.replace(/[-_]/g, " ")) || "",
+      label: lowerHumanize(decodeURIComponent(label).replace(/[-_]/g, " ")) || "",
       href,
       "aria-label": Astro.url.pathname === href ? "page" : undefined,
     });
@@ -28,7 +28,7 @@ paths.forEach((label: string, i: number) => {
     {
       parts.map(({ label, ...attrs }, index) => (
         <li class="capitalize" role="listitem">
-          {index > 0 && <span class="inlin-block">/</span>}
+          {index > 0 && <span class="mx-2">/</span>}
           {index !== parts.length - 1 ? (
             <a class="text-txt-p dark:text-darkmode-txt-p" {...attrs}>
               {label}
