@@ -1,0 +1,58 @@
+---
+import BaseLayout from "@components/base/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const galleries = await getCollection("gallery");
+const title = "Gallery";
+const description = "Photo Gallery";
+---
+
+<BaseLayout title={title} description={description}>
+  <section class="container p-8">
+    <h1 class="text-5xl font-bold text-center my-8">{title}</h1>
+    <div class="row mx-auto max-w-7xl">
+      {galleries.map((album) => (
+        <div class="col-12 md:col-6 mb-8 px-4">
+          <a href={`/gallery/${album.id}`} class="group gallery-card block w-full relative rounded-2xl overflow-hidden shadow-md hover:shadow-xl" style="padding-top: 56.25%; opacity: 1 !important; transform: translateZ(0); clip-path: inset(0 round 16px);">
+            {/* Image Layer - Absolute, filling the container */}
+            <img 
+              src={album.data.cover} 
+              alt={album.data.title} 
+              loading="lazy"
+              class="absolute top-0 left-0 w-full h-full object-cover rounded-2xl"
+            />
+            
+            {/* Overlay Wrapper - Absolute, contains Mask and Text */}
+            <div class="absolute top-0 left-0 w-full h-full z-10 rounded-2xl">
+               {/* Mask Layer */}
+               <div class="gallery-mask absolute top-0 left-0 w-full h-full rounded-2xl"></div>
+               
+               {/* Content Layer */}
+               <div class="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center text-center p-6">
+                 <h2 class="font-bold tracking-tight mb-2 drop-shadow-md text-[22px]" style={{ color: '#ffffff', opacity: 1 }}>{album.data.title}</h2>
+                 {album.data.description && (
+                   <p class="text-[14px] font-normal drop-shadow-sm" style={{ color: '#ffffff', opacity: 1 }}>{album.data.description}</p>
+                 )}
+               </div>
+            </div>
+          </a>
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .gallery-mask {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+  /* Optional: If you want to restore the hover effect later, un-comment this:
+  .gallery-card:hover .gallery-mask {
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+  */
+</style>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

@@ -30,6 +30,8 @@
     "gray-matter": "^4.0.3",
     "katex": "^0.16.21",
     "marked": "^6.0.0",
+    "photoswipe": "^5.4.4",
+    "photoswipe-dynamic-caption-plugin": "^1.2.7",
     "prettier-plugin-astro": "^0.11.0",
     "prettier-plugin-tailwindcss": "^0.4.1",
     "prop-types": "^15.8.1",

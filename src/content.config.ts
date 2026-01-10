@@ -178,6 +178,23 @@ const terms = defineCollection({
   schema: searchable,
 });
 
+const gallery = defineCollection({
+  loader: glob({ pattern: "**\/[^_]*.{md,mdx}", base: "./src/content/gallery" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    cover: z.string(),
+    date: z.date().optional(),
+    images: z.array(
+      z.object({
+        url: z.string(),
+        alt: z.string().default(""),
+        title: z.string().optional(),
+      })
+    ).optional(), // images might be optional if we just want a cover
+  }),
+});
+
 // Export collections
 export const collections = {
   about,
@@ -190,4 +207,5 @@ export const collections = {
   portfolio,
   recipes,
   terms,
+  gallery,
 };
