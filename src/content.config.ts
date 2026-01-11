@@ -185,6 +185,7 @@ const gallery = defineCollection({
     description: z.string().optional(),
     cover: z.string(),
     date: z.date().optional(),
+    pin: z.boolean().default(false),
     images: z.array(
       z.object({
         url: z.string(),

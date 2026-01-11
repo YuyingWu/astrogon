@@ -2,9 +2,22 @@
 import BaseLayout from "@components/base/BaseLayout.astro";
 import { getCollection } from "astro:content";
 
-const galleries = await getCollection("gallery");
-const title = "Gallery";
-const description = "Photo Gallery";
+const galleries = (await getCollection("gallery")).sort((a, b) => {
+  const pinA = a.data.pin ? 1 : 0;
+  const pinB = b.data.pin ? 1 : 0;
+  
+  if (pinA !== pinB) {
+    return pinB - pinA; // Pinned items first
+  }
+  
+  const dateA = a.data.date ? new Date(a.data.date).valueOf() : 0;
+  const dateB = b.data.date ? new Date(b.data.date).valueOf() : 0;
+  
+  return dateB - dateA; // Newest first
+});
+
+const title = "行万里路";
+const description = "小伍的摄影图库";
 ---
 
 <BaseLayout title={title} description={description}>
