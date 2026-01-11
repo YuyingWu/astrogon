@@ -32,7 +32,7 @@ const { title, description, cover, images } = entry.data;
       <div id="gallery" class="mx-auto container my-8 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4">
          {images && images.map((image) => (
           <div class="mb-4 break-inside-avoid">
-              <a href={image.url} target="_blank" rel="noopener noreferrer" class="block cursor-zoom-in group" style={{ opacity: '1 !important' }}>
+              <a href={image.url} class="block cursor-zoom-in group" style={{ opacity: '1 !important' }}>
                   <img 
                   src={image.url} 
                   alt={image.title || image.alt} 
@@ -65,63 +65,89 @@ const { title, description, cover, images } = entry.data;
   const gallery = document.getElementById('gallery');
 
   if (gallery) {
-    const lightbox = new PhotoSwipeLightbox({
-      gallery: '#gallery',
-      children: 'a',
-      pswpModule: () => import('photoswipe'),
-      paddingFn: (viewportSize) => {
-        return viewportSize.x < 700 
-          ? { top: 0, bottom: 0, left: 0, right: 0 }
-          : { top: 30, bottom: 30, left: 70, right: 70 };
-      },
-    });
-
-    const captionPlugin = new PhotoSwipeDynamicCaption(lightbox, {
-      type: 'below',
-    });
-    
-    // Register custom mobile caption UI
-    lightbox.on('uiRegister', function() {
-      lightbox.pswp?.ui.registerElement({
-        name: 'mobile-caption',
-        order: 9,
-        isButton: false,
-        appendTo: 'root',
-        onInit: (el, pswp) => {
-          el.className = 'pswp-mobile-caption';
-          pswp.on('change', () => {
-            const currSlide = pswp.currSlide;
-             if (currSlide && currSlide.data && currSlide.data.element) {
-              const hiddenCaption = currSlide.data.element.querySelector('.pswp-caption-content');
-              el.innerHTML = hiddenCaption ? hiddenCaption.innerHTML : '';
-             } else {
-               el.innerHTML = '';
-             }
-          });
-        }
+    // Helper to build datasource from current DOM
+    const getDataSource = () => {
+      return Array.from(gallery.querySelectorAll('a')).map(anchor => {
+        const img = anchor.querySelector('img');
+        const width = Number(img?.naturalWidth) || Number(anchor.getAttribute('data-pswp-width')) || 0;
+        const height = Number(img?.naturalHeight) || Number(anchor.getAttribute('data-pswp-height')) || 0;
+        const caption = anchor.querySelector('.pswp-caption-content')?.innerHTML || img?.alt || '';
+        
+        return {
+          src: anchor.href,
+          w: width,
+          h: height,
+          alt: img?.alt || '',
+          title: caption,
+          msrc: img?.src, // thumbnail src for transition
+          element: anchor // used by photoswipe to calculate thumbnail bounds
+        };
       });
-    });
+    };
 
-    // Handle natural dimensions
-    const images = gallery.querySelectorAll('img');
-    
-    images.forEach(img => {
-      if (img.complete) {
-        setupAnchor(img);
-      } else {
-        img.onload = () => setupAnchor(img);
+    gallery.addEventListener('click', async (e) => {
+      // Robustly find anchor, handling text nodes
+      const target = e.target instanceof Element ? e.target : e.target.parentElement;
+      const anchor = target?.closest('a');
+      
+      if (!anchor || !gallery.contains(anchor)) return;
+
+      e.preventDefault();
+
+      // Ensure we have dimensions for the clicked item at minimum
+      const img = anchor.querySelector('img');
+      if (img && (!img.complete || img.naturalWidth === 0)) {
+         // Determine if we want to wait or just ignore. 
+         // If we open without dims, PS might glitch. 
+         // Let's try to proceed; PS might handle it if we pass 0, or we can just block.
+         // Given persistent "new window" complaint, blocking unsafe clicks is best,
+         // BUT user asked for "dynamic init". 
+         // If we init now, we capture current state. 
+         return; 
       }
+
+      const items = getDataSource();
+      const index = items.findIndex(item => item.element === anchor);
+
+      const lightbox = new PhotoSwipeLightbox({
+        dataSource: items,
+        index: index,
+        pswpModule: () => import('photoswipe'),
+        paddingFn: (viewportSize) => {
+          return viewportSize.x < 700 
+            ? { top: 0, bottom: 0, left: 0, right: 0 }
+            : { top: 30, bottom: 30, left: 70, right: 70 };
+        },
+      });
+
+      // Plugins
+      new PhotoSwipeDynamicCaption(lightbox, { type: 'below' });
+
+      // Custom Mobile Caption
+      lightbox.on('uiRegister', function() {
+        lightbox.pswp?.ui.registerElement({
+          name: 'mobile-caption',
+          order: 9,
+          isButton: false,
+          appendTo: 'root',
+          onInit: (el, pswp) => {
+            el.className = 'pswp-mobile-caption';
+            pswp.on('change', () => {
+              const currSlide = pswp.currSlide;
+               if (currSlide && currSlide.data && currSlide.data.element) {
+                const hiddenCaption = currSlide.data.element.querySelector('.pswp-caption-content');
+                el.innerHTML = hiddenCaption ? hiddenCaption.innerHTML : '';
+               } else {
+                 el.innerHTML = '';
+               }
+            });
+          }
+        });
+      });
+
+      lightbox.init();
+      lightbox.loadAndOpen(index); // Explicitly open the lightbox at the correct index
     });
-
-    function setupAnchor(img) {
-      const anchor = img.closest('a');
-      if (anchor) {
-        anchor.setAttribute('data-pswp-width', img.naturalWidth);
-        anchor.setAttribute('data-pswp-height', img.naturalHeight);
-      }
-    }
-
-    lightbox.init();
   }
 </script>
 
