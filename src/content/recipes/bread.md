@@ -30,5 +30,10 @@ instructions:
   - 35分钟以前，看看发酵情况，如果不够，可以暂停，延长发酵时间15分钟。发酵结束之后，调至菜单18蔬菜蛋糕模式，烤制35分钟。
 ---
 
+## 冬天的汤种法
+1. 汤种：18g高筋粉+90ml水，65度离火，冷却备用
+2. 主面团：汤种75g，牛奶+一个蛋112g（冰箱拿出来），盐3g，黄油25g，糖30g，耐高糖酵母3g
+3. 菜单3 4小时20分钟，软面包（二发的模式）
+
 ## 附
 * [面包机说明书](https://www.xiaohongshu.com/discovery/item/6690a8bc0000000025002da0?app_platform=android&ignoreEngage=true&app_version=9.15.0&share_from_user_hidden=true&xsec_source=app_share&type=normal&xsec_token=CBScnVDM8awF7omUY8p5Nd8adaObOELRpOz1n41Lkau7M%3D&author_share=1&xhsshare=&shareRedId=ODgyNzs5O0I2NzUyOTgwNjczOTc6N0g5&apptime=1767405977&share_id=7c63a750ffb040d6868770eca6d0b41a&share_channel=copy_link)
