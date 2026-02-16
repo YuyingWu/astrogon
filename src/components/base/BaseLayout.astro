@@ -139,7 +139,14 @@ const baseUrl = "https://wuyuying.com";
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-      gtag("config", "G-FXLENQF8ZQ");
+
+      // Use astro:page-load to handle both initial load and view transitions
+      document.addEventListener("astro:page-load", () => {
+        gtag("config", "G-FXLENQF8ZQ", {
+          page_title: document.title,
+          page_path: location.pathname,
+        });
+      });
     </script>
 
     <!-- https://docs.astro.build/en/guides/view-transitions -->

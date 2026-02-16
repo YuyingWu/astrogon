@@ -6,7 +6,7 @@ import "photoswipe-dynamic-caption-plugin/photoswipe-dynamic-caption-plugin.css"
 
 export async function getStaticPaths() {
   const galleries = await getCollection("gallery");
-  return galleries.map(entry => ({
+  return galleries.map((entry) => ({
     params: { slug: entry.id },
     props: { entry },
   }));
@@ -14,44 +14,97 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
-const { title, description, cover, images } = entry.data;
+const { title, description, cover, images, date } = entry.data;
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "ImageGallery",
+  name: title,
+  description: description,
+  image: images?.map((img) => img.url) || [cover],
+  url: Astro.url.href,
+  datePublished: date ? date.toISOString() : undefined,
+  author: {
+    "@type": "Person",
+    name: "小伍",
+    url: "https://wuyuying.com",
+  },
+};
 ---
 
-<BaseLayout title={title} description={description} image={cover}>
+<BaseLayout
+  title={title}
+  description={description}
+  image={cover}
+  schema={schema}
+>
   <section class="container p-8">
     <div class="text-center my-16 mb-32">
-      <a href="/gallery" class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-primary transition-colors mb-8">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+      <a
+        href="/gallery"
+        class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-primary transition-colors mb-8"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-4 w-4 mr-1"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+            clip-rule="evenodd"></path>
         </svg>
-        Back to Galleries
+         Back to Galleries
       </a>
       <h1 class="text-5xl font-bold mb-4">{title}</h1>
-      {description && <p class="text-xl text-neutral-600 dark:text-gray-400">{description}</p>}
+      {
+        description && (
+          <p class="text-xl text-neutral-600 dark:text-gray-400">
+            {description}
+          </p>
+        )
+      }
 
-      <div id="gallery" class="mx-auto container my-8 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4">
-         {images && images.map((image) => (
-          <div class="mb-4 break-inside-avoid">
-              <a href={image.url} class="block cursor-zoom-in group" style={{ opacity: '1 !important' }}>
-                  <img 
-                  src={image.url} 
-                  alt={image.title || image.alt} 
-                  loading="lazy"
-                  class="w-full border border-transparent hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-xl"
-                  style={{ clipPath: 'inset(0 round 16px)' }}
+      <div
+        id="gallery"
+        class="mx-auto container my-8 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4"
+      >
+        {
+          images &&
+            images.map((image) => (
+              <div class="mb-4 break-inside-avoid">
+                <a
+                  href={image.url}
+                  class="block cursor-zoom-in group"
+                  style={{ opacity: "1 !important" }}
+                >
+                  <img
+                    src={image.url}
+                    alt={image.title || image.alt}
+                    loading="lazy"
+                    class="w-full border border-transparent hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-xl"
+                    style={{ clipPath: "inset(0 round 16px)" }}
                   />
-                 {image.title && (
-                  <>
-                    <div class="pswp-caption-content" style="display: none">{image.title}</div>
-                    <p class="text-xs text-left mt-1 text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity">{image.title}</p>
-                  </>
-                 )}
-              </a>
-          </div>
-        ))}
+                  {image.title && (
+                    <>
+                      <div class="pswp-caption-content" style="display: none">
+                        {image.title}
+                      </div>
+                      <p class="text-xs text-left mt-1 text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                        {image.title}
+                      </p>
+                    </>
+                  )}
+                </a>
+              </div>
+            ))
+        }
       </div>
 
-      <div class="mt-12 prose dark:prose-invert max-w-none text-left mx-auto glass px-8 py-8 rounded-lg">
+      <div
+        class="mt-12 prose dark:prose-invert max-w-none text-left mx-auto glass px-8 py-8 rounded-lg"
+      >
         <Content />
       </div>
     </div>
@@ -59,87 +112,115 @@ const { title, description, cover, images } = entry.data;
 </BaseLayout>
 
 <script>
-  import PhotoSwipeLightbox from 'photoswipe/lightbox';
-  import PhotoSwipeDynamicCaption from 'photoswipe-dynamic-caption-plugin';
+  import PhotoSwipeLightbox from "photoswipe/lightbox";
+  import PhotoSwipeDynamicCaption from "photoswipe-dynamic-caption-plugin";
 
-  const gallery = document.getElementById('gallery');
+  const gallery = document.getElementById("gallery");
 
   if (gallery) {
     // Helper to build datasource from current DOM
     const getDataSource = () => {
-      return Array.from(gallery.querySelectorAll('a')).map(anchor => {
-        const img = anchor.querySelector('img');
-        const width = Number(img?.naturalWidth) || Number(anchor.getAttribute('data-pswp-width')) || 0;
-        const height = Number(img?.naturalHeight) || Number(anchor.getAttribute('data-pswp-height')) || 0;
-        const caption = anchor.querySelector('.pswp-caption-content')?.innerHTML || img?.alt || '';
-        
+      return Array.from(gallery.querySelectorAll("a")).map((anchor) => {
+        const img = anchor.querySelector("img");
+        const width =
+          Number(img?.naturalWidth) ||
+          Number(anchor.getAttribute("data-pswp-width")) ||
+          0;
+        const height =
+          Number(img?.naturalHeight) ||
+          Number(anchor.getAttribute("data-pswp-height")) ||
+          0;
+        const caption =
+          anchor.querySelector(".pswp-caption-content")?.innerHTML ||
+          img?.alt ||
+          "";
+
         return {
           src: anchor.href,
           w: width,
           h: height,
-          alt: img?.alt || '',
+          alt: img?.alt || "",
           title: caption,
           msrc: img?.src, // thumbnail src for transition
-          element: anchor // used by photoswipe to calculate thumbnail bounds
+          element: anchor, // used by photoswipe to calculate thumbnail bounds
         };
       });
     };
 
-    gallery.addEventListener('click', async (e) => {
-      // Robustly find anchor, handling text nodes
-      const target = e.target instanceof Element ? e.target : e.target.parentElement;
-      const anchor = target?.closest('a');
-      
+    gallery.addEventListener("click", async (e) => {
+      // Robustly find anchor
+      const target = e.target as HTMLElement;
+      const anchor = target?.closest("a");
+
       if (!anchor || !gallery.contains(anchor)) return;
 
       e.preventDefault();
 
       // Ensure we have dimensions for the clicked item at minimum
-      const img = anchor.querySelector('img');
+      const img = anchor.querySelector("img");
       if (img && (!img.complete || img.naturalWidth === 0)) {
-         // Determine if we want to wait or just ignore. 
-         // If we open without dims, PS might glitch. 
-         // Let's try to proceed; PS might handle it if we pass 0, or we can just block.
-         // Given persistent "new window" complaint, blocking unsafe clicks is best,
-         // BUT user asked for "dynamic init". 
-         // If we init now, we capture current state. 
-         return; 
+        return;
       }
 
       const items = getDataSource();
-      const index = items.findIndex(item => item.element === anchor);
+      const index = items.findIndex((item) => item.element === anchor);
 
       const lightbox = new PhotoSwipeLightbox({
         dataSource: items,
         index: index,
-        pswpModule: () => import('photoswipe'),
+        pswpModule: () => import("photoswipe"),
         paddingFn: (viewportSize) => {
-          return viewportSize.x < 700 
+          return viewportSize.x < 700
             ? { top: 0, bottom: 0, left: 0, right: 0 }
             : { top: 30, bottom: 30, left: 70, right: 70 };
         },
       });
 
       // Plugins
-      new PhotoSwipeDynamicCaption(lightbox, { type: 'below' });
+      new PhotoSwipeDynamicCaption(lightbox, { type: "below" });
 
       // Custom Mobile Caption
-      lightbox.on('uiRegister', function() {
-        lightbox.pswp?.ui.registerElement({
-          name: 'mobile-caption',
+      lightbox.on("uiRegister", function () {
+        if (!lightbox.pswp?.ui) return;
+        lightbox.pswp.ui.registerElement({
+          name: "mobile-caption",
           order: 9,
           isButton: false,
-          appendTo: 'root',
+          appendTo: "root",
           onInit: (el, pswp) => {
-            el.className = 'pswp-mobile-caption';
-            pswp.on('change', () => {
+            el.className = "pswp-mobile-caption";
+            pswp.on("change", () => {
               const currSlide = pswp.currSlide;
-               if (currSlide && currSlide.data && currSlide.data.element) {
-                const hiddenCaption = currSlide.data.element.querySelector('.pswp-caption-content');
-                el.innerHTML = hiddenCaption ? hiddenCaption.innerHTML : '';
-               } else {
-                 el.innerHTML = '';
-               }
+              if (currSlide && currSlide.data && currSlide.data.element) {
+                const hiddenCaption = currSlide.data.element.querySelector(
+                  ".pswp-caption-content",
+                );
+                el.innerHTML = hiddenCaption ? hiddenCaption.innerHTML : "";
+              } else {
+                el.innerHTML = "";
+              }
+            });
+          },
+        });
+      });
+
+      // Google Analytics Tracking
+      lightbox.on("uiRegister", () => {
+        const pswp = lightbox.pswp;
+        if (!pswp) return;
+
+        pswp.on("change", () => {
+          const currSlide = pswp.currSlide;
+          // @ts-ignore
+          if (
+            currSlide &&
+            currSlide.data &&
+            typeof (window as any).gtag !== "undefined"
+          ) {
+            // @ts-ignore
+            (window as any).gtag("event", "view_item", {
+              event_category: "gallery",
+              event_label: currSlide.data.src,
             });
           }
         });
@@ -153,7 +234,8 @@ const { title, description, cover, images } = entry.data;
 
 <style is:global>
   @media (max-width: 700px) {
-    .pswp__button--arrow--prev, .pswp__button--arrow--next {
+    .pswp__button--arrow--prev,
+    .pswp__button--arrow--next {
       top: auto !important;
       bottom: 20px !important;
       margin-top: 0 !important;
@@ -166,7 +248,7 @@ const { title, description, cover, images } = entry.data;
       left: auto !important;
       right: 20px !important;
     }
-    
+
     /* Hide default dynamic caption on mobile */
     .pswp__dynamic-caption {
       display: none !important;
