@@ -10,6 +10,9 @@ display_url: https://wuyuying.com
 publish_mode: simple
 search: true
 
+editor:
+  preview: false
+
 media_folder: "public/uploads"
 public_folder: "/uploads"
 
@@ -29,16 +32,18 @@ collections:
     label: 博客
     folder: src/content/blog
     create: true
+    identifier_field: slug
     extension: md
     format: frontmatter
     slug: "{{slug}}"
     fields:
+      - { label: 文件 Slug, name: slug, widget: string, required: false, hint: "用于本地文件名。留空时会自动用当前文件名兜底；建议英文小写和连字符，如 soft-bread" }
       - { label: 标题, name: title, widget: string }
       - { label: 简介, name: description, widget: text, required: false }
       - { label: 自动简介, name: autodescription, widget: boolean, default: true, required: false }
       - { label: 草稿, name: draft, widget: boolean, default: false, required: false }
       - { label: 发布时间, name: published, widget: datetime, required: false, format: "YYYY-MM-DD HH:mm:ss" }
-      - { label: 封面, name: cover, widget: image, required: false }
+      - { label: 封面, name: image, widget: image, required: false }
       - { label: 封面描述, name: imageAlt, widget: string, required: false }
       - { label: 作者, name: author, widget: string, required: false }
       - { label: 分类, name: categories, widget: list, required: false }
@@ -49,10 +54,12 @@ collections:
     label: 文档
     folder: src/content/docs
     create: true
+    identifier_field: slug
     extension: md
     format: frontmatter
     slug: "{{slug}}"
     fields:
+      - { label: 文件 Slug, name: slug, widget: string, required: false, hint: "用于本地文件名。留空时会自动用当前文件名兜底；建议英文小写和连字符，如 baking-notes" }
       - { label: 标题, name: title, widget: string }
       - { label: 简介, name: description, widget: text, required: false }
       - { label: 自动简介, name: autodescription, widget: boolean, default: true, required: false }
@@ -69,10 +76,12 @@ collections:
     label: 图集
     folder: src/content/gallery
     create: true
+    identifier_field: slug
     extension: md
     format: frontmatter
     slug: "{{slug}}"
     fields:
+      - { label: 文件 Slug, name: slug, widget: string, required: false, hint: "用于本地文件名。留空时会自动用当前文件名兜底；建议英文小写和连字符，如 suzhou-trip" }
       - { label: 标题, name: title, widget: string }
       - { label: 描述, name: description, widget: text, required: false }
       - { label: 日期, name: date, widget: datetime, required: false, format: "YYYY-MM-DD HH:mm:ss" }
@@ -92,16 +101,18 @@ collections:
     label: 菜谱
     folder: src/content/recipes
     create: true
+    identifier_field: slug
     extension: md
     format: frontmatter
     slug: "{{slug}}"
     fields:
+      - { label: 文件 Slug, name: slug, widget: string, required: false, hint: "用于本地文件名。留空时会自动用当前文件名兜底；建议英文小写和连字符，如 milk-bread" }
       - { label: 标题, name: title, widget: string }
       - { label: 简介, name: description, widget: text, required: false }
       - { label: 自动简介, name: autodescription, widget: boolean, default: true, required: false }
       - { label: 草稿, name: draft, widget: boolean, default: false, required: false }
       - { label: 发布时间, name: published, widget: datetime, required: false, format: "YYYY-MM-DD HH:mm:ss" }
-      - { label: 封面, name: cover, widget: image, required: false }
+      - { label: 封面, name: image, widget: image, required: false }
       - { label: 封面描述, name: imageAlt, widget: string, required: false }
       - { label: 作者, name: author, widget: string, required: false }
       - { label: 分类, name: categories, widget: list, required: false }

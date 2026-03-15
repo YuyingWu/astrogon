@@ -24,6 +24,43 @@
     );
   }
 
+  function withDefaultOssProcess(url) {
+    if (!url || /[?&]x-oss-process=/.test(url)) return url;
+    var separator = url.indexOf("?") === -1 ? "?" : "&";
+    return url + separator + "x-oss-process=image/resize,w_1200/format,webp";
+  }
+
+  function getCollectionName(collection) {
+    if (!collection) return "";
+    if (typeof collection.get === "function") {
+      return String(collection.get("name") || "");
+    }
+    return String(collection.name || "");
+  }
+
+  function normalizeSlug(value) {
+    if (!value) return "";
+    return String(value)
+      .trim()
+      .replace(/^\/+|\/+$/g, "")
+      .replace(/^.*[\\/]/, "")
+      .replace(/\.(md|mdx)$/i, "");
+  }
+
+  function deriveEntrySlug(entry) {
+    if (!entry || typeof entry.get !== "function") return "";
+    var explicit = normalizeSlug(entry.getIn && entry.getIn(["data", "slug"]));
+    if (explicit) return explicit;
+
+    var entrySlug = normalizeSlug(entry.get("slug"));
+    if (entrySlug) return entrySlug;
+
+    var pathSlug = normalizeSlug(entry.get("path"));
+    if (pathSlug) return pathSlug;
+
+    return normalizeSlug(entry.get("file"));
+  }
+
   function uploadFile(file, options) {
     var endpoint = options && options.upload_endpoint ? options.upload_endpoint : "/api/oss/sts";
     var uploadToken = options && options.upload_token ? options.upload_token : "";
@@ -59,7 +96,7 @@
           if (!res.ok) {
             throw new Error("OSS upload failed: " + res.status);
           }
-          return payload.upload.url;
+          return withDefaultOssProcess(payload.upload.url);
         }).catch(function (error) {
           throw withOssCorsHint(error, payload.upload.host);
         });
@@ -113,7 +150,7 @@
               if (typeof handleInsert !== "function") {
                 throw new Error("Decap handleInsert callback is missing.");
               }
-              if (allowMultiple) {
+              if (allowMultiple && urls.length > 1) {
                 handleInsert(urls);
               } else {
                 handleInsert(urls[0]);
@@ -129,6 +166,30 @@
       };
     },
   };
+
+  window.CMS.registerEventListener({
+    name: "preSave",
+    handler: function handler(_ref2) {
+      var entry = _ref2 && _ref2.entry;
+      var collection = _ref2 && _ref2.collection;
+      if (!entry || typeof entry.setIn !== "function") return entry;
+
+      var collectionName = getCollectionName(collection);
+      var needsSlug =
+        collectionName === "blog" ||
+        collectionName === "docs" ||
+        collectionName === "gallery" ||
+        collectionName === "recipes";
+      if (!needsSlug) return entry;
+
+      var current = entry.getIn(["data", "slug"]);
+      if (current && String(current).trim()) return entry;
+
+      var fallback = deriveEntrySlug(entry);
+      if (!fallback) return entry;
+      return entry.setIn(["data", "slug"], fallback);
+    },
+  });
 
   window.CMS.registerMediaLibrary(aliyunOssMediaLibrary);
   window.CMS.init();

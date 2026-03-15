@@ -5,6 +5,7 @@ import { glob } from "astro/loaders";
 // When updating the set of searchable collections, update collectionList in /src/pages/search.astro
 
 const searchable = z.object({
+  slug: z.string().optional(),
   title: z.string(),
   description: z.string().optional(),
   autodescription: z.boolean().default(true),
@@ -23,6 +24,11 @@ const social = z.object({
   website: z.string().optional(),
   youtube: z.string().optional(),
 });
+
+function normalizeSingleImage(value?: string | string[]): string | undefined {
+  if (Array.isArray(value)) return value[0];
+  return value;
+}
 
 const about = defineCollection({
   loader: glob({ pattern: "-index.{md,mdx}", base: "./src/content/about" }),
@@ -60,11 +66,11 @@ const blog = defineCollection({
       complexity: z.number().default(1),
       hideToc: z.boolean().default(false),
       // Legacy fields compatibility
-      cover: z.string().optional(),
+      cover: z.union([z.string(), z.array(z.string())]).optional(),
       published: z.date().optional(),
     }).transform((data) => ({
       ...data,
-      image: data.image || data.cover,
+      image: data.image || normalizeSingleImage(data.cover),
       date: data.date || data.published,
     })),
 });
@@ -164,11 +170,11 @@ const recipes = defineCollection({
       // Legacy fields compatibility
       categories: z.array(z.string()).optional(),
       tags: z.array(z.string()).optional(),
-      cover: z.string().optional(),
+      cover: z.union([z.string(), z.array(z.string())]).optional(),
       published: z.date().optional(),
     }).transform((data) => ({
       ...data,
-      image: data.image || data.cover,
+      image: data.image || normalizeSingleImage(data.cover),
       date: data.date || data.published,
     })),
 });
