@@ -12,6 +12,18 @@
     return response.json();
   }
 
+  function isNetworkFetchError(error) {
+    return error && (error.name === "TypeError" || /failed to fetch/i.test(String(error.message || "")));
+  }
+
+  function withOssCorsHint(error, uploadHost) {
+    if (!isNetworkFetchError(error)) return error;
+    return new Error(
+      "无法连接 OSS 上传地址，通常是 OSS Bucket CORS 未放行当前站点。请在 OSS 控制台配置 CORS。上传域名: " +
+        uploadHost,
+    );
+  }
+
   function uploadFile(file, options) {
     var endpoint = options && options.upload_endpoint ? options.upload_endpoint : "/api/oss/sts";
     var uploadToken = options && options.upload_token ? options.upload_token : "";
@@ -48,6 +60,8 @@
             throw new Error("OSS upload failed: " + res.status);
           }
           return payload.upload.url;
+        }).catch(function (error) {
+          throw withOssCorsHint(error, payload.upload.host);
         });
       });
   }
