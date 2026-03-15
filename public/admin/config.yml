@@ -1,0 +1,121 @@
+backend:
+  name: github
+  repo: YuyingWu/astrogon
+  branch: main
+  base_url: https://wuyuying.com
+  auth_endpoint: api/decap/auth
+
+site_url: https://wuyuying.com
+display_url: https://wuyuying.com
+publish_mode: simple
+search: true
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+media_library:
+  name: aliyun-oss
+  config:
+    upload_endpoint: /api/oss/sts
+    upload_token: ""
+
+slug:
+  encoding: "unicode"
+  clean_accents: true
+  sanitize_replacement: "-"
+
+collections:
+  - name: blog
+    label: 博客
+    folder: src/content/blog
+    create: true
+    extension: md
+    format: frontmatter
+    slug: "{{slug}}"
+    fields:
+      - { label: 标题, name: title, widget: string }
+      - { label: 简介, name: description, widget: text, required: false }
+      - { label: 自动简介, name: autodescription, widget: boolean, default: true, required: false }
+      - { label: 草稿, name: draft, widget: boolean, default: false, required: false }
+      - { label: 发布时间, name: published, widget: datetime, required: false, format: "YYYY-MM-DD HH:mm:ss" }
+      - { label: 封面, name: cover, widget: image, required: false }
+      - { label: 封面描述, name: imageAlt, widget: string, required: false }
+      - { label: 作者, name: author, widget: string, required: false }
+      - { label: 分类, name: categories, widget: list, required: false }
+      - { label: 标签, name: tags, widget: list, required: false }
+      - { label: 正文, name: body, widget: markdown }
+
+  - name: docs
+    label: 文档
+    folder: src/content/docs
+    create: true
+    extension: md
+    format: frontmatter
+    slug: "{{slug}}"
+    fields:
+      - { label: 标题, name: title, widget: string }
+      - { label: 简介, name: description, widget: text, required: false }
+      - { label: 自动简介, name: autodescription, widget: boolean, default: true, required: false }
+      - { label: 草稿, name: draft, widget: boolean, default: false, required: false }
+      - { label: 发布时间, name: pubDate, widget: datetime, required: false, format: "YYYY-MM-DD HH:mm:ss" }
+      - { label: 更新时间, name: modDate, widget: datetime, required: false, format: "YYYY-MM-DD HH:mm:ss" }
+      - { label: 封面, name: image, widget: image, required: false }
+      - { label: 封面描述, name: imageAlt, widget: string, required: false }
+      - { label: 隐藏目录, name: hideToc, widget: boolean, default: false, required: false }
+      - { label: 隐藏左侧导航, name: hideNav, widget: boolean, default: false, required: false }
+      - { label: 正文, name: body, widget: markdown }
+
+  - name: gallery
+    label: 图集
+    folder: src/content/gallery
+    create: true
+    extension: md
+    format: frontmatter
+    slug: "{{slug}}"
+    fields:
+      - { label: 标题, name: title, widget: string }
+      - { label: 描述, name: description, widget: text, required: false }
+      - { label: 日期, name: date, widget: datetime, required: false, format: "YYYY-MM-DD HH:mm:ss" }
+      - { label: 置顶, name: pin, widget: boolean, default: false, required: false }
+      - { label: 封面, name: cover, widget: image }
+      - label: 图片列表
+        name: images
+        widget: list
+        required: false
+        fields:
+          - { label: 图片地址, name: url, widget: image }
+          - { label: 图片描述, name: alt, widget: string, required: false }
+          - { label: 图片标题, name: title, widget: string, required: false }
+      - { label: 正文, name: body, widget: markdown, required: false }
+
+  - name: recipes
+    label: 菜谱
+    folder: src/content/recipes
+    create: true
+    extension: md
+    format: frontmatter
+    slug: "{{slug}}"
+    fields:
+      - { label: 标题, name: title, widget: string }
+      - { label: 简介, name: description, widget: text, required: false }
+      - { label: 自动简介, name: autodescription, widget: boolean, default: true, required: false }
+      - { label: 草稿, name: draft, widget: boolean, default: false, required: false }
+      - { label: 发布时间, name: published, widget: datetime, required: false, format: "YYYY-MM-DD HH:mm:ss" }
+      - { label: 封面, name: cover, widget: image, required: false }
+      - { label: 封面描述, name: imageAlt, widget: string, required: false }
+      - { label: 作者, name: author, widget: string, required: false }
+      - { label: 分类, name: categories, widget: list, required: false }
+      - { label: 标签, name: tags, widget: list, required: false }
+      - { label: 准备时间(分钟), name: prepTime, widget: number, required: false, value_type: int, min: 0 }
+      - { label: 份量, name: servings, widget: number, required: false, value_type: int, min: 0 }
+      - { label: 饮食类型, name: diet, widget: string, required: false }
+      - label: 食材
+        name: ingredients
+        widget: object
+        required: false
+        fields:
+          - { label: 食材列表, name: list, widget: list, required: false }
+          - { label: 用量列表, name: qty, widget: list, required: false }
+      - { label: 步骤, name: instructions, widget: list, required: false }
+      - { label: 备注, name: notes, widget: list, required: false }
+      - { label: 正文, name: body, widget: markdown, required: false }
