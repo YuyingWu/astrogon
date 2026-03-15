@@ -3,7 +3,7 @@ backend:
   repo: YuyingWu/astrogon
   branch: main
   base_url: https://wuyuying.com
-  auth_endpoint: api/decap/auth
+  auth_endpoint: /api/decap/auth
 
 site_url: https://wuyuying.com
 display_url: https://wuyuying.com
