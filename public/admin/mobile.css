@@ -1,0 +1,578 @@
+/*  ────────────────────────────────────────────────────────────
+ *  Decap CMS v3 – Mobile-responsive overrides
+ *  ────────────────────────────────────────────────────────────
+ *  Decap uses Emotion (CSS-in-JS). Class names follow the pattern
+ *  `css-<hash>-<ComponentName>`, so we target them with
+ *  attribute substring selectors: [class*="ComponentName"].
+ *
+ *  Key hardcoded values we must override:
+ *    AppMainContainer  → min-width: 800px
+ *    AppHeaderContent  → min-width: 800px
+ *    SidebarContainer  → width: 250px; position: fixed
+ *    CollectionMain    → padding-left: 280px
+ *    EditorContainer   → min-width: 800px
+ *    ToolbarContainer  → min-width: 800px
+ *    ControlPaneContainer → max-width: 800px
+ *
+ *  IMPORTANT: Do NOT hide [class*="PreviewPaneContainer"] — when
+ *  `editor.preview: false`, Decap renders a combined component with
+ *  class containing BOTH "PreviewPaneContainer" AND "ControlPaneContainer".
+ *  Hiding it hides the entire editor form!
+ *  ──────────────────────────────────────────────────────────── */
+
+/* ═══════════════════════════════════════════
+   0. Global baseline — prevent iOS zoom on inputs
+   ═══════════════════════════════════════════ */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font-size: 16px; /* ≥ 16px prevents iOS auto-zoom */
+}
+
+/* ═══════════════════════════════════════════
+   1. Mobile: ≤ 768px — phone & small tablet
+   ═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  :root {
+    --mobile-pad: 12px;
+    --mobile-touch: 44px; /* Apple HIG minimum */
+  }
+
+  /* ── Kill all min-width: 800px constraints ── */
+  #nc-root,
+  [class*="AppMainContainer"],
+  [class*="AppHeaderContent"],
+  [class*="EditorContainer"],
+  [class*="ToolbarContainer"],
+  [class*="NoPreviewContainer"],
+  [class*="ControlPaneContainer"],
+  [class*="PreviewPaneContainer"] {
+    min-width: 0 !important;
+    max-width: 100vw !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Prevent body overflow */
+  html,
+  body {
+    overflow-x: hidden !important;
+    width: 100%;
+  }
+
+  /* ── Header ── */
+  [class*="AppHeader-css"] {
+    position: sticky !important;
+    top: 0;
+    z-index: 100;
+  }
+
+  [class*="AppHeaderContent"] {
+    padding: 0 var(--mobile-pad) !important;
+    padding-left: 52px !important; /* space for hamburger button */
+    gap: 6px !important;
+    flex-wrap: nowrap !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    align-items: center !important;
+  }
+
+  /* Hide "Contents" nav link on mobile — hamburger serves same purpose */
+  [class*="AppHeaderNavList"] {
+    display: none !important;
+  }
+
+  /* Header actions: keep compact */
+  [class*="AppHeaderActions"] {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    flex-shrink: 0 !important;
+    margin-left: auto !important;
+  }
+
+  /* Hide site link on mobile to save space */
+  [class*="AppHeaderSiteLink"] {
+    display: none !important;
+  }
+
+  /* Quick add button: compact */
+  [class*="AppHeaderQuickNewButton"] {
+    font-size: 13px !important;
+    padding: 6px 10px !important;
+    min-height: 36px !important;
+  }
+
+  /* Avatar button: compact */
+  [class*="AvatarDropdownButton"] {
+    min-height: 36px !important;
+    min-width: 36px !important;
+  }
+
+  /* ── Main container ── */
+  [class*="AppMainContainer"] {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* ── Sidebar: hide by default, shown via drawer toggle ── */
+  [class*="SidebarContainer"] {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    z-index: 200 !important;
+    width: min(82vw, 320px) !important;
+    max-width: min(82vw, 320px) !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    margin: 0 !important;
+    padding: 12px 0 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    background: #fff !important;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.18) !important;
+    transform: translateX(-105%);
+    transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+  }
+
+  /* Dark mode sidebar background */
+  @media (prefers-color-scheme: dark) {
+    [class*="SidebarContainer"] {
+      background: #1a1f2e !important;
+    }
+  }
+
+  /* Drawer open state — toggled by JS */
+  body.mobile-drawer-open [class*="SidebarContainer"] {
+    transform: translateX(0) !important;
+  }
+
+  /* Lock body scroll when drawer is open */
+  body.mobile-drawer-open {
+    overflow: hidden !important;
+  }
+
+  /* ── Collection page: remove left padding meant for fixed sidebar ── */
+  [class*="CollectionMain"] {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  [class*="CollectionContainer"] {
+    margin: var(--mobile-pad) !important;
+    width: auto !important;
+    min-width: 0 !important;
+  }
+
+  /* ── Collection top bar (filter, sort, view toggle, new button) ── */
+  [class*="CollectionTop"] {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    padding: 8px 0 !important;
+  }
+
+  /* ── Entry cards grid: single column on phones ── */
+  [class*="CardsGrid"],
+  [class*="cardGrid"] {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  /* Entry list items */
+  [class*="ListCard"],
+  [class*="ListCardLink"] {
+    padding: 10px var(--mobile-pad) !important;
+  }
+
+  /* ══════════════════════════════════════════════
+     Editor page overrides
+     ══════════════════════════════════════════════ */
+
+  /* EditorContainer: originally position:absolute; height:100%; overflow:hidden
+     On mobile we need it to be relative + auto height so content flows naturally */
+  [class*="EditorContainer"] {
+    position: relative !important;
+    height: auto !important;
+    min-height: calc(100vh - 48px) !important;
+    overflow: visible !important;
+    padding-top: 0 !important;
+  }
+
+  /* Editor toolbar (save/publish/delete bar) */
+  [class*="ToolbarContainer"] {
+    position: sticky !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 50 !important;
+    flex-wrap: wrap !important;
+    gap: 4px !important;
+    padding: 8px var(--mobile-pad) !important;
+    height: auto !important;
+    min-height: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Toolbar back link section — make it full-width row */
+  [class*="ToolbarSectionBackLink"] {
+    width: 100% !important;
+    flex-wrap: nowrap !important;
+    min-width: 0 !important;
+  }
+
+  /* Toolbar main section — stack buttons */
+  [class*="ToolbarSectionMain"] {
+    width: 100% !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    min-width: 0 !important;
+  }
+
+  /* Toolbar subsections — allow wrapping */
+  [class*="ToolbarSubSection"] {
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    min-width: 0 !important;
+  }
+
+  /* Status / publish dropdown — don't overflow */
+  [class*="ToolbarDropdown"] {
+    min-width: 0 !important;
+  }
+
+  /* Published button — compact */
+  [class*="PublishedToolbarButton"],
+  [class*="publishedButton"] {
+    max-width: 130px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  /* Back arrow in editor */
+  [class*="BackArrow"] {
+    min-height: var(--mobile-touch);
+    min-width: var(--mobile-touch);
+    flex-shrink: 0 !important;
+  }
+
+  /* Back collection text — truncate if too long */
+  [class*="BackCollection"] {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    max-width: 200px !important;
+    min-height: var(--mobile-touch);
+  }
+
+  /* Back status badge */
+  [class*="BackStatus"] {
+    white-space: nowrap !important;
+    font-size: 11px !important;
+  }
+
+  /* Preview link in toolbar */
+  [class*="PreviewButtonContainer"] {
+    min-width: 0 !important;
+  }
+
+  [class*="PreviewLink"] {
+    font-size: 13px !important;
+    padding: 4px 8px !important;
+  }
+
+  /* Editor split pane area — ensure it renders */
+  [class*="NoPreviewContainer"],
+  [class*="splitPane"] {
+    height: auto !important;
+    min-height: 400px !important;
+    overflow: visible !important;
+  }
+
+  /* CRITICAL: The combined PreviewPaneContainer-ControlPaneContainer
+     When editor.preview is false, Decap merges them into one element.
+     We must ensure it's visible and properly sized. */
+  [class*="PreviewPaneContainer"] {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 300px !important;
+    overflow: visible !important;
+    box-sizing: border-box !important;
+    padding: 0 !important;
+  }
+
+  /* Inner ControlPaneContainer (the actual form fields wrapper) */
+  [class*="ControlPaneContainer"] {
+    max-width: 100% !important;
+    padding: 0 var(--mobile-pad) !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Editor area */
+  [class*="Editor e1nx103k"] {
+    height: auto !important;
+    margin: 0 !important;
+    position: relative !important;
+  }
+
+  /* ── Form field controls ── */
+  [class*="ControlContainer"] input,
+  [class*="ControlContainer"] textarea,
+  [class*="ControlContainer"] select,
+  [class*="ControlPaneContainer"] input,
+  [class*="ControlPaneContainer"] textarea,
+  [class*="ControlPaneContainer"] select {
+    font-size: 16px !important;
+    line-height: 1.5;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Control container — full width */
+  [class*="ControlContainer"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Control topbar (field label row) */
+  [class*="ControlTopbar"] {
+    flex-wrap: wrap !important;
+  }
+
+  /* Field labels */
+  [class*="FieldLabel"] {
+    font-size: 14px !important;
+  }
+
+  /* ── Buttons: all touch-friendly ── */
+  button,
+  [role="button"],
+  a[class*="Button"],
+  [class*="ToolbarButton"] {
+    min-height: var(--mobile-touch);
+    min-width: var(--mobile-touch);
+  }
+
+  /* Delete button — compact */
+  [class*="DeleteButton"] {
+    font-size: 13px !important;
+    padding: 6px 10px !important;
+  }
+
+  /* ── Markdown editor toolbar: wrap buttons ── */
+  [class*="MarkdownControl"] [class*="Toolbar"] {
+    position: relative !important;
+    flex-wrap: wrap !important;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Rich text editor: comfortable line height */
+  [data-slate-editor="true"] {
+    line-height: 1.7 !important;
+    padding: 12px !important;
+  }
+
+  /* Markdown raw editor textarea */
+  [class*="RawEditor"] textarea {
+    width: 100% !important;
+    min-height: 300px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* ── Dialogs / Modals: fit screen ── */
+  [class*="ModalContainer"],
+  [role="dialog"] {
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+    max-height: 90vh !important;
+    max-height: 90dvh !important;
+    margin: auto !important;
+    overflow-y: auto !important;
+  }
+
+  /* ── Media library modal ── */
+  [class*="MediaLibrary"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 90vh !important;
+    height: 90dvh !important;
+  }
+
+  [class*="MediaLibrary"] [class*="CardGrid"],
+  [class*="MediaLibrary"] [class*="cardGrid"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  /* ── Search ── */
+  [class*="SearchInput"] {
+    font-size: 16px !important;
+    width: 100% !important;
+  }
+
+  /* ── Toast notifications: position safely ── */
+  [class*="Toast"] {
+    left: var(--mobile-pad) !important;
+    right: var(--mobile-pad) !important;
+    bottom: var(--mobile-pad) !important;
+    max-width: none !important;
+  }
+
+  /* ── Dropdown menus: ensure they fit viewport ── */
+  [class*="DropdownList"],
+  [class*="StyledList"] {
+    max-width: calc(100vw - 24px) !important;
+    max-height: 60vh !important;
+    overflow-y: auto !important;
+  }
+
+  /* ── Image widget: fit width ── */
+  [class*="ImageWrapper"],
+  [class*="StyledImage"] {
+    max-width: 100% !important;
+  }
+
+  /* ── List widget items: stack properly ── */
+  [class*="ListItem"],
+  [class*="ObjectWidgetTopBar"] {
+    flex-wrap: wrap !important;
+    gap: 4px !important;
+  }
+
+  /* ══════════════════════════════════════════════
+     Drawer overlay & toggle button (injected by JS)
+     ══════════════════════════════════════════════ */
+  .mobile-drawer-toggle {
+    position: fixed;
+    top: 4px;
+    left: 6px;
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.92);
+    color: #374151;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition:
+      background 0.15s,
+      box-shadow 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-drawer-toggle:active {
+    background: rgba(240, 240, 240, 0.95);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .mobile-drawer-toggle {
+      background: rgba(30, 35, 50, 0.92);
+      color: #e5e7eb;
+    }
+    .mobile-drawer-toggle:active {
+      background: rgba(40, 45, 60, 0.95);
+    }
+  }
+
+  .mobile-drawer-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 150;
+    background: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.22s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body.mobile-drawer-open .mobile-drawer-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   2. Extra-small phones: ≤ 400px
+   ═══════════════════════════════════════════ */
+@media (max-width: 400px) {
+  :root {
+    --mobile-pad: 8px;
+  }
+
+  /* Header: even more compact */
+  [class*="AppHeaderContent"] {
+    padding: 0 8px !important;
+    padding-left: 48px !important;
+    gap: 4px;
+  }
+
+  [class*="AppHeaderQuickNewButton"] {
+    font-size: 12px !important;
+    padding: 4px 8px !important;
+  }
+
+  /* Media grid: single column on very small phones */
+  [class*="MediaLibrary"] [class*="CardGrid"],
+  [class*="MediaLibrary"] [class*="cardGrid"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Editor toolbar: more compact */
+  [class*="BackCollection"] {
+    max-width: 150px !important;
+    font-size: 13px !important;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   3. Tablet: 769px - 1024px
+   ═══════════════════════════════════════════ */
+@media (min-width: 769px) and (max-width: 1024px) {
+  [class*="AppMainContainer"],
+  [class*="AppHeaderContent"],
+  [class*="EditorContainer"],
+  [class*="ToolbarContainer"] {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  [class*="SidebarContainer"] {
+    width: 200px !important;
+  }
+
+  [class*="CollectionMain"] {
+    padding-left: 220px !important;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   4. Desktop: hide mobile-only elements
+   ═══════════════════════════════════════════ */
+@media (min-width: 769px) {
+  .mobile-drawer-toggle,
+  .mobile-drawer-overlay {
+    display: none !important;
+  }
+}
